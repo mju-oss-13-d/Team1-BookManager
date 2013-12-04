@@ -7,7 +7,7 @@ void writing_data_file(BOOK_NODE *books)           /*  저 수준 파일 입출�
     char turple = '|';            /* 터플 */
     
     int infd;
-    char buffer[40];
+    char buffer[35];
     
 //  infd = open("book.dbf", O_CREAT | O_RDWR | O_BINARY); /* DOS 용. */
 

@@ -5,7 +5,7 @@ BOOK_NODE *main_list = NULL; /* 이 변수는 반드시 도서목록 연결 리�
 int menu_print()
 {
     int choisen_menu_number;  /* 선택된 메뉴번호를 저장하는 변수 */
-
+    char a[30]; //*book name*//
     main_list = loading_data_file(main_list); /* 기본 데이터 파일인 "book.dbf"을 부른다. */
         
     while(1)                    /* 메뉴는 종료를 선택할 때까지 반복해서 출력된다. */
@@ -15,6 +15,8 @@ int menu_print()
         printf("2.  List\n");
         printf("3.  Save as a data file\n");
         printf("4.  Quit\n\n");
+	printf("5.  Delete List\n");
+	printf("6.  Search the Book\n");
         printf("Enter the number : ");
 
         choisen_menu_number = getchar(); /* 메뉴 번호를 아스키코드로 받는다. */
@@ -37,6 +39,13 @@ int menu_print()
         case '4':
             printf("Thanks for using. See you again.\n");
             exit(-1);
+
+	case '5':
+	    printf("What Kind of Book do you want to delete?\n");
+	    inputing_data_except_null(a, sizeof(a));
+	    delete_book_file(a, main_list);
+	    writing_data_file(main_list);
+	    break;
             
 
         default:                /* 사용자가 지정된 키 이외의 입력을 했을 경우 에러 메세지 출력 후 다시 메뉴를 출력. */

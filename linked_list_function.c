@@ -2,6 +2,25 @@
 
 /* 책을 추가하는 insert 함수 */
 //BOOK_NODE *insert(char *book, char *author, char *publisher, char *price, BOOK_NODE *list)
+void delete_book_file(char* a, BOOK_NODE *list){
+    BOOK_NODE *tmp;
+    if(strcmp(a, list->book) == 0){
+	tmp = list;
+	list = list->next;
+	free(tmp);
+		
+	return;
+    } else {
+	if(list->next != 0){
+		list = list->next;
+		delete_book_file(a, list);
+	} else {
+	printf("there's no bookfile in here.\n");
+	}
+    }
+}
+	
+
 BOOK_NODE *insert(BOOK_NODE *book_st, BOOK_NODE *list)
 {
     BOOK_NODE *current = NULL;  /* 앞장 서는 연결 선 */
@@ -21,7 +40,7 @@ BOOK_NODE *insert(BOOK_NODE *book_st, BOOK_NODE *list)
     *newnode = *book_st;          /* 새로운 노드에 입력 받았던 내용을 넣는다. */
 
     /* 삽입 위치로 이동 */
-    while((current != NULL) && (current -> book < book_st -> book)) /* 처음이 아니고, 오름차순으로.  */
+    while((current != NULL) && strcmp(current -> book, book_st -> book) == 1) /* 처음이 아니고, 오름차순으로.  */
     {
         follow = current;       /* follow는 current의 NODE에, */
         current = current -> next; /* current는 한개 NODE 전진. */
