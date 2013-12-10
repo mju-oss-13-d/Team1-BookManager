@@ -1,26 +1,48 @@
 #include "header_files.h"
+/*책을 지우는 delete_book_file함수*/
+BOOK_NODE* delete_book_file(char* a, char* b, BOOK_NODE *list){
+	BOOK_NODE *Temp; //반환하기 위한 임시포인터
+	if(strcmp(a, list -> book) == 0 && strcmp(b, list -> author) == 0){
+		Temp = list;
+		list = list -> next;
+		printf("\nSuccess! There's the book that you delete\n");
+		free (Temp);
+		return list;
+	}else{
+		BOOK_NODE* Current = list;
+		Temp = list;
+		while (Current -> next != NULL && (strcmp(Current -> next -> book, a) != 0|| strcmp(Current -> next -> author, b) != 0)){
+			Current = Current-> next;
+		}
+		if(Current -> next != NULL){
+			Current -> next = Current -> next -> next;
+			printf("\nSuccess! There's the book that you delete\n");
+			free (Temp -> next);
+			return list;
+		}
+	}
+	printf("\nSorry, There's no the book that you delete\n");
+	return 0;
+}
+	
+BOOK_NODE* Find(char* t, char* t2, BOOK_NODE *list){
+	printf("\n");
+	while((strcmp(t, list -> book) != 0 || strcmp(t2, list -> author) != 0) && list -> next != 0){
+		printf("plese wait...\n");
+		list = list -> next;
+	}		//책 제목과 저자를 확인
+	if(strcmp(t, list -> book) == 0 && strcmp(t2, list -> author) == 0){
+		printf("\nSuccess! There's the book that you find\n");
+		return (list);
+	} else {
+		printf("\nSorry, There's no the book that you find\n");
+		return 0;
+	}
+	//성공과 실패 메세지
+}
 
 /* 책을 추가하는 insert 함수 */
 //BOOK_NODE *insert(char *book, char *author, char *publisher, char *price, BOOK_NODE *list)
-void delete_book_file(char* a, BOOK_NODE *list){
-    BOOK_NODE *tmp;
-    if(strcmp(a, list->book) == 0){
-	tmp = list;
-	list = list->next;
-	free(tmp);
-		
-	return;
-    } else {
-	if(list->next != 0){
-		list = list->next;
-		delete_book_file(a, list);
-	} else {
-	printf("there's no bookfile in here.\n");
-	}
-    }
-}
-	
-
 BOOK_NODE *insert(BOOK_NODE *book_st, BOOK_NODE *list)
 {
     BOOK_NODE *current = NULL;  /* 앞장 서는 연결 선 */
@@ -40,7 +62,7 @@ BOOK_NODE *insert(BOOK_NODE *book_st, BOOK_NODE *list)
     *newnode = *book_st;          /* 새로운 노드에 입력 받았던 내용을 넣는다. */
 
     /* 삽입 위치로 이동 */
-    while((current != NULL) && strcmp(current -> book, book_st -> book) == 1) /* 처음이 아니고, 오름차순으로.  */
+    while((current != NULL) && strcmp(current -> book, book_st -> book) < 0) /* 처음이 아니고, 오름차순으로.  */
     {
         follow = current;       /* follow는 current의 NODE에, */
         current = current -> next; /* current는 한개 NODE 전진. */
@@ -130,3 +152,4 @@ unsigned int counting_links(BOOK_NODE *books) /* linked list의 NODE 갯수를 �
     }
     return ui_counter;
 }
+

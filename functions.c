@@ -1,11 +1,12 @@
 #include "header_files.h"
 
 BOOK_NODE *main_list = NULL; /* 이 변수는 반드시 도서목록 연결 리스트의 시작을 가지고 있어야 한다. */
+BOOK_NODE *Found_book = NULL;
+BOOK_NODE *deleted_book = NULL;
  
 int menu_print()
 {
     int choisen_menu_number;  /* 선택된 메뉴번호를 저장하는 변수 */
-    char a[30]; //*book name*//
     main_list = loading_data_file(main_list); /* 기본 데이터 파일인 "book.dbf"을 부른다. */
         
     while(1)                    /* 메뉴는 종료를 선택할 때까지 반복해서 출력된다. */
@@ -14,9 +15,9 @@ int menu_print()
         printf("1.  Insert\n");
         printf("2.  List\n");
         printf("3.  Save as a data file\n");
-        printf("4.  Quit\n\n");
-	printf("5.  Delete List\n");
-	printf("6.  Search the Book\n");
+	printf("4.  (new)Delete List\n");		/*new*/
+	printf("5.  (new)Search the Book\n");	/*new*/
+        printf("6.  Quit\n\n");
         printf("Enter the number : ");
 
         choisen_menu_number = getchar(); /* 메뉴 번호를 아스키코드로 받는다. */
@@ -37,16 +38,16 @@ int menu_print()
             break;
 
         case '4':
-            printf("Thanks for using. See you again.\n");
-            exit(-1);
+		delete_book();
+	    break;
 
 	case '5':
-	    printf("What Kind of Book do you want to delete?\n");
-	    inputing_data_except_null(a, sizeof(a));
-	    delete_book_file(a, main_list);
-	    writing_data_file(main_list);
-	    break;
-            
+		Find_book();
+            	break;
+
+	case '6':
+            printf("Thanks for using. See you again.\n");
+            exit(-1);
 
         default:                /* 사용자가 지정된 키 이외의 입력을 했을 경우 에러 메세지 출력 후 다시 메뉴를 출력. */
             printf("You enter the wrong number.\n");
@@ -109,4 +110,41 @@ int pointing_location_of_null(char *data) /* 문자열을 카운팅하는 함수
     }
     return icnt;
 }
-
+void delete_book(){
+	deleted_book = NULL;
+	if (main_list -> next == 0){
+		printf("List is one! Do you want delete list? Delete 'book.bdf'!\n");
+		return;
+	}
+	printf("What Kind of Book do you want to delete?\n");
+	char name[30];
+	char author[30];
+	printf("Book Name: ");
+	inputing_data_except_null(name, sizeof(name));
+	printf("\nBook Author: ");
+	inputing_data_except_null(author, sizeof(author));
+	deleted_book = delete_book_file(name, author, main_list);
+	if (deleted_book != 0){
+		main_list = deleted_book;
+		writing_data_file(main_list);
+	}
+}
+void Find_book() // 책이름을 받고 책을 찾는 함수
+{
+	Found_book = NULL;
+	printf("What is name of the book?\n");
+	char name[30];
+	char author[30];
+	printf("Book Name: ");
+	inputing_data_except_null(name, sizeof(name));
+	printf("\nBook Author: ");
+	inputing_data_except_null(author, sizeof(author));
+	Found_book = Find(name, author, main_list);
+	if (Found_book != 0){
+		printf("Book      : %s\n", Found_book -> book);
+		printf("Author    : %15s | ", Found_book -> author);
+		printf("Publisher : %15s\n", Found_book -> publisher);
+		printf("Price     : %15s | ", Found_book -> price);
+		printf("Year      : %15s\n", Found_book -> year);
+	}
+}
